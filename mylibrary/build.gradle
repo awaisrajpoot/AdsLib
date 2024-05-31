@@ -8,7 +8,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        minSdk 19
+        minSdk 21
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -43,7 +43,7 @@ project.afterEvaluate {
             mavenJava(MavenPublication) {
                 setGroupId 'com.example'
                 setArtifactId 'mylibrary'
-                version '1.0.1'
+                version '1.0.3'
                 artifact bundleReleaseAar
             }
         }
