@@ -1,0 +1,70 @@
+plugins {
+    alias(libs.plugins.android.library)
+    //id 'maven-publish'
+}
+
+android {
+    namespace 'com.example.mylibrary'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 24
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            //maven
+            //libraryProject
+            //mavenJava
+            mavenJava(MavenPublication) {
+                setGroupId 'com.example'
+                setArtifactId 'mylibrary'
+                version '1.0.5'
+                artifact bundleReleaseAar
+            }
+        }
+    }
+}
+
+//afterEvaluate {
+//    android.libraryVariants.each {variant ->
+//        publishing.publications.create(variant.name, MavenPublication){
+//
+//            //from components.findByName(variant.name)
+//
+//            groupId 'com.example'
+//            artifactId 'mylibrary'
+//            version '1.0.0'
+//
+//            artifact bundleReleaseAar
+//
+//        }
+//    }
+//}
+
+
+
