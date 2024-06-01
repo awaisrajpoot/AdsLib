@@ -8,12 +8,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.mylibrary.DemoCls;
-import com.example.mylibrary.GetServerItems;
+import com.example.mylibrary.AdsInitializer;
+import com.example.mylibrary.ServerHelpers.AdsServerItems;
 
-public class MainActivity extends AppCompatActivity implements GetServerItems.ServerListener {
+public class MainActivity extends AppCompatActivity{
 
     String adsUrl = "http://androidlayouts.com/test_ads.json";
+    String metaLink = "http://androidlayouts.com/meta_info.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,16 +28,7 @@ public class MainActivity extends AppCompatActivity implements GetServerItems.Se
             return insets;
         });
 
-        new GetServerItems(this, adsUrl);
+        new AdsInitializer(this).getClearCode(metaLink);
     }
 
-    @Override
-    public void OnServerError() {
-
-    }
-
-    @Override
-    public void OnConnected(String adsStatus, String admobId, String admobStatus, String admobBanner, String admobInter, String fbStatus, String fbRec, String fbBanner, String fbInter, String unityId, String unityStatus, String unityTestMode, String unityBanner, String unityInter, String chartId, String chartSignature, String chartSdkStatus, String chartStatus, String startAppId, String startAppStatus) {
-
-    }
 }
