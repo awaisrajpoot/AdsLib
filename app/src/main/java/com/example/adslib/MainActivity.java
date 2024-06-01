@@ -9,8 +9,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mylibrary.DemoCls;
+import com.example.mylibrary.GetServerItems;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GetServerItems.ServerListener {
+
+    String adsUrl = "http://androidlayouts.com/test_ads.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,16 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        new DemoCls(this);
+        new GetServerItems(this, adsUrl);
+    }
+
+    @Override
+    public void OnServerError() {
+
+    }
+
+    @Override
+    public void OnConnected(String adsStatus, String admobId, String admobStatus, String admobBanner, String admobInter, String fbStatus, String fbRec, String fbBanner, String fbInter, String unityId, String unityStatus, String unityTestMode, String unityBanner, String unityInter, String chartId, String chartSignature, String chartSdkStatus, String chartStatus, String startAppId, String startAppStatus) {
+
     }
 }
