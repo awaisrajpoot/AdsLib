@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.learning.learnhtml.AppHelpers.AppConstants;
-
 public class CodeChecker {
 
     SharedPreferences sharedPreferences;
