@@ -13,7 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class GetServerItems {
+public class UpdateCodeHelper {
 
     private RequestQueue mQueue;
     private Context mContext;
@@ -21,7 +21,7 @@ public class GetServerItems {
     ServerListener serverListener;
 
 
-    public GetServerItems(Context context, String metaLink){
+    public UpdateCodeHelper(Context context, String metaLink){
         this.mContext = context;
         mQueue = Volley.newRequestQueue(mContext);
         jsonParse(metaLink);
@@ -36,7 +36,7 @@ public class GetServerItems {
                     public void onResponse(JSONObject response) {
                         try {
                             Log.e("server_response",
-                                    "server response is : " + response.toString());
+                                    "clear code server response is : " + response.toString());
 
                             String clearCode = response.getString("clear_code");
 

@@ -1,5 +1,8 @@
 [versions]
 agp = "8.4.1"
+audienceNetworkSdk = "6.16.0"
+chartboostSdk = "9.0.0"
+facebook = "6.17.0.0"
 gson = "2.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -8,10 +11,17 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.0"
 constraintlayout = "2.1.4"
+playServicesAds = "23.1.0"
+playServicesAdsIdentifier = "18.1.0"
+playServicesBase = "18.5.0"
+unityAds = "4.5.0"
 volley = "1.2.1"
 
 
 [libraries]
+audience-network-sdk = { module = "com.facebook.android:audience-network-sdk", version.ref = "audienceNetworkSdk" }
+chartboost-sdk = { module = "com.chartboost:chartboost-sdk", version.ref = "chartboostSdk" }
+facebook = { module = "com.google.ads.mediation:facebook", version.ref = "facebook" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -20,6 +30,10 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
+play-services-ads-identifier = { module = "com.google.android.gms:play-services-ads-identifier", version.ref = "playServicesAdsIdentifier" }
+play-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBase" }
+unity-ads = { module = "com.unity3d.ads:unity-ads", version.ref = "unityAds" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 
 [plugins]

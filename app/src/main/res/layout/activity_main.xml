@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,13 +8,64 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <RelativeLayout
+            android:layout_weight="1.0"
+            android:layout_width="match_parent"
+            android:layout_height="0.0dp">
+
+            <com.example.mylibrary.AdWrapperViews.RectBannerView
+                android:id="@+id/rect_banner_view"
+                android:layout_width="@dimen/rect_banner_width"
+                android:layout_height="@dimen/rect_banner_height"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_weight="1.0"
+            android:layout_width="match_parent"
+            android:layout_height="0.0dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/simpleBannerBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp"
+                    android:textSize="@dimen/_15sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:textColor="#3F51B5"
+                    android:background="#ccc"
+                    android:text="Go to Simple Banner"/>
+
+                <TextView
+                    android:id="@+id/largeBannerBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp"
+                    android:textSize="@dimen/_15sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:textColor="#3F51B5"
+                    android:background="#ccc"
+                    android:text="Go to Large Banner"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

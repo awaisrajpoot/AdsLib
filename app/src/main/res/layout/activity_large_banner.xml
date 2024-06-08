@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".LargeBannerActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.example.mylibrary.AdWrapperViews.LargeBannerView
+            android:id="@+id/br1_large_banner"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/large_banner_height"/>
+
+        <RelativeLayout
+            android:layout_weight="1.0"
+            android:layout_width="match_parent"
+            android:layout_height="0.0dp">
+
+        </RelativeLayout>
+
+        <com.example.mylibrary.AdWrapperViews.LargeBannerView
+            android:id="@+id/br2_large_banner"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/large_banner_height" />
+
+    </LinearLayout>
+
+</RelativeLayout>

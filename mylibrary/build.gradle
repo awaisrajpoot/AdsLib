@@ -35,6 +35,22 @@ dependencies {
 
     implementation libs.volley
     implementation libs.gson
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+
+    //admob
+    implementation libs.play.services.ads
+
+    //facebook + bidding
+    implementation libs.audience.network.sdk
+    implementation libs.facebook
+
+    //unity
+    implementation libs.unity.ads
+
+    //chartboost + play services
+    implementation libs.chartboost.sdk
+    implementation libs.play.services.base
+    implementation libs.play.services.ads.identifier
 }
 
 project.afterEvaluate {

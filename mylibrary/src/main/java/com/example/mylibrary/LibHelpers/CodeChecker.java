@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.mylibrary.AdsInitializer;
+
 public class CodeChecker {
 
     SharedPreferences sharedPreferences;
@@ -12,8 +14,8 @@ public class CodeChecker {
     String savedCode = "";
     CodeUpdateListener codeUpdateListener;
 
-    public CodeChecker(Context context, SharedPreferences sharedPreferences, String clearCode){
-        codeUpdateListener = (CodeUpdateListener) context;
+    public CodeChecker(AdsInitializer adsInitializer, SharedPreferences sharedPreferences, String clearCode){
+        codeUpdateListener = (CodeUpdateListener) adsInitializer;
         this.sharedPreferences = sharedPreferences;
         this.clearCode = clearCode;
 
