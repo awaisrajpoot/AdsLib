@@ -17,7 +17,7 @@ public class FileNameCreator {
     public void checkAndCreateFileName(){
         String fileName = sharedPreferences.getString(LibConstants.FILE_PREF_KEY,"");
 
-        if (fileName.equals("")){
+        if (fileName.isEmpty()){
             Log.e("font_dn", "file name does not exist : "+fileName);
 
             String savedFileName = LibConstants.DATA_FILE_NAME + System.currentTimeMillis() + jsonExe;
@@ -41,7 +41,7 @@ public class FileNameCreator {
 
         Log.e("font_dn", "folder name is : "+fileName);
 
-        if (fileName.equals("")){
+        if (fileName.isEmpty()){
             Log.e("font_dn", "folder name does not exist : "+fileName);
 
             String savedFileName = LibConstants.DATA_FILE_NAME + System.currentTimeMillis() + jsonExe;
