@@ -35,7 +35,7 @@ dependencies {
 
     implementation libs.volley
     implementation libs.gson
-    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+    implementation libs.sdp.android
 
     //admob
     implementation libs.play.services.ads
@@ -62,7 +62,7 @@ project.afterEvaluate {
             mavenJava(MavenPublication) {
                 setGroupId 'com.example'
                 setArtifactId 'mylibrary'
-                version '1.0.9'
+                version '1.1.2'
                 artifact bundleReleaseAar
             }
         }

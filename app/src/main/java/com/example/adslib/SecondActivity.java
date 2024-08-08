@@ -25,7 +25,6 @@ public class SecondActivity extends AppCompatActivity implements AdsInitializer.
 
         fileName = getIntent().getStringExtra(MainActivity.FILE_KEY);
 
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_second);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
