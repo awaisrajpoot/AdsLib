@@ -14,6 +14,7 @@ import com.chartboost.sdk.events.CacheError;
 import com.chartboost.sdk.events.CacheEvent;
 import com.chartboost.sdk.events.ClickError;
 import com.chartboost.sdk.events.ClickEvent;
+import com.chartboost.sdk.events.ExpirationEvent;
 import com.chartboost.sdk.events.ImpressionEvent;
 import com.chartboost.sdk.events.ShowError;
 import com.chartboost.sdk.events.ShowEvent;
@@ -28,6 +29,12 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
+import com.unity3d.ads.BannerAd;
+import com.unity3d.ads.BannerConfiguration;
+import com.unity3d.ads.BannerShowListener;
+import com.unity3d.ads.BannerSize;
+import com.unity3d.ads.LoadListener;
+import com.unity3d.ads.UnityAdsError;
 import com.unity3d.services.banners.BannerErrorInfo;
 import com.unity3d.services.banners.BannerView;
 import com.unity3d.services.banners.UnityBannerSize;
@@ -172,49 +179,60 @@ public class SimpleBannerAd {
 
     private void setUnityBanner() {
         Log.d(ServerAdConstants.AD_LOG_TAG, "calling unity banner");
-        unityBannerView = new BannerView(mActivity,
-                adUnitHelper.getUnityBanner(),
-                new UnityBannerSize(320,50));
 
-        unityBannerView.setListener(new BannerView.IListener() {
+        BannerConfiguration.Builder builder = new BannerConfiguration.Builder(
+                adUnitHelper.getUnityBanner(),
+                new BannerSize(320, 50),
+                new BannerShowListener() {
+                    @Override
+                    public void onImpression(@NonNull BannerAd bannerAd) {
+
+                    }
+
+                    @Override
+                    public void onClicked(@NonNull BannerAd bannerAd) {
+
+                    }
+
+                    @Override
+                    public void onFailedToShow(@NonNull BannerAd bannerAd, @NonNull UnityAdsError unityAdsError) {
+
+                        Log.e(ServerAdConstants.AD_LOG_TAG, "unity banner not loaded");
+                        adContainer.removeAllViews();
+                        if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
+                            setChartBoostBanner();
+                        }
+                        else {
+                            setAdmobBanner();
+                        }
+
+                    }
+                }
+        );
+
+        BannerAd.load(builder.build(), new LoadListener<BannerAd>() {
             @Override
-            public void onBannerLoaded(BannerView bannerView) {
+            public void onAdLoaded(@Nullable BannerAd bannerAd, @Nullable UnityAdsError unityAdsError) {
                 Log.e(ServerAdConstants.AD_LOG_TAG, "unity banner loaded");
                 checkLogValues();
-                //Toast.makeText(context,"loaded unity",Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onBannerClick(BannerView bannerView) {
-
-            }
-
-            @Override
-            public void onBannerFailedToLoad(BannerView bannerView, BannerErrorInfo bannerErrorInfo) {
-                Log.e(ServerAdConstants.AD_LOG_TAG, "unity banner not loaded");
                 adContainer.removeAllViews();
-                if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
-                    setChartBoostBanner();
+                if (bannerAd != null) {
+                    adContainer.addView(bannerAd.getView());
                 }
-                else {
-                    setAdmobBanner();
-                }
-            }
-
-            @Override
-            public void onBannerLeftApplication(BannerView bannerView) {
-
             }
         });
 
-        unityBannerView.load();
-        adContainer.removeAllViews();
-        adContainer.addView(unityBannerView);
     }
 
     private void setChartBoostBanner(){
         Log.d(ServerAdConstants.AD_LOG_TAG, "calling chartBoost banner loaded");
         BannerCallback bannerCallback = new BannerCallback() {
+            @Override
+            public void onAdExpired(@NonNull ExpirationEvent expirationEvent) {
+
+            }
+
             @Override
             public void onAdLoaded(@NonNull CacheEvent cacheEvent, @Nullable CacheError cacheError) {
                 Log.e(ServerAdConstants.AD_LOG_TAG, "chartBoost banner loaded");

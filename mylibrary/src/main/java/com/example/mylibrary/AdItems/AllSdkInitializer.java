@@ -10,6 +10,8 @@ import com.chartboost.sdk.callbacks.StartCallback;
 import com.chartboost.sdk.events.StartError;
 import com.example.mylibrary.LibHelpers.AdUnitHelper;
 import com.example.mylibrary.LibHelpers.ServerAdConstants;
+import com.unity3d.ads.InitializationConfiguration;
+import com.unity3d.ads.InitializationListener;
 import com.unity3d.ads.UnityAds;
 
 import org.jetbrains.annotations.Nullable;
@@ -45,9 +47,25 @@ public class AllSdkInitializer {
 
     private void unityInitializer(){
         Log.d(ServerAdConstants.AD_LOG_TAG, "unity SDK Init Start");
+
         // Initialize the SDK:
-        UnityAds.initialize (compatActivity, adUnitHelper.getUnityId(),
-                Boolean.parseBoolean(adUnitHelper.getUnityTestMode()));
+        InitializationConfiguration configuration = new InitializationConfiguration
+                .Builder(adUnitHelper.getUnityId())
+                .withTestMode(Boolean.parseBoolean(adUnitHelper.getUnityTestMode()))
+                .build();
+
+        InitializationListener listener = error -> {
+            if (error == null) {
+                // Initialization SuccessFull
+                Log.d(ServerAdConstants.AD_LOG_TAG, "Unity SDK Init Successfully");
+            } else {
+                // Handle initialization error
+                Log.e(ServerAdConstants.AD_LOG_TAG, "Unity SDK Init Error");
+            }
+        };
+
+        UnityAds.initialize(configuration, listener);
+
     }
 
     private void chartBoostInitializer(){

@@ -14,6 +14,7 @@ import com.chartboost.sdk.events.CacheError;
 import com.chartboost.sdk.events.CacheEvent;
 import com.chartboost.sdk.events.ClickError;
 import com.chartboost.sdk.events.ClickEvent;
+import com.chartboost.sdk.events.ExpirationEvent;
 import com.chartboost.sdk.events.ImpressionEvent;
 import com.chartboost.sdk.events.ShowError;
 import com.chartboost.sdk.events.ShowEvent;
@@ -27,6 +28,14 @@ import com.facebook.ads.AdSize;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
+import com.unity3d.ads.BannerAd;
+import com.unity3d.ads.BannerConfiguration;
+import com.unity3d.ads.BannerShowListener;
+import com.unity3d.ads.BannerSize;
+import com.unity3d.ads.LoadListener;
+import com.unity3d.ads.UnityAdsError;
+import com.unity3d.services.banners.BannerView;
+import com.unity3d.services.banners.UnityBannerSize;
 
 
 public class BannerRecAd {
@@ -36,12 +45,15 @@ public class BannerRecAd {
 
     private AdView admobAdView;
     private com.facebook.ads.AdView fbAdView;
+    //private BannerView unityRecBanner;
+    private BannerAd unityRecBanner;
     private Banner chartBoostBanner;
 
     private AdUnitHelper adUnitHelper;
 
     private boolean admobStatus = false;
     private boolean fbStatus = false;
+    private boolean unityStatus = false;
     private boolean cbStatus = false;
     private boolean startAppStatus = false;
     private boolean splashIsGone = false;
@@ -67,6 +79,9 @@ public class BannerRecAd {
         else if (adUnitHelper.getFbStatus().equals(ServerAdConstants.STATUS_OK)){
             setFbRectangleBanner();
         }
+        else if (adUnitHelper.getUnityStatus().equals(ServerAdConstants.STATUS_OK)){
+            setUnityRectangleBanner();
+        }
         else if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
             setChartBoostRecBanner();
         }
@@ -76,13 +91,15 @@ public class BannerRecAd {
     }
 
     private void checkLogValues(){
-        Log.e(ServerAdConstants.AD_LOG_TAG, "admob rect banner status : " + adUnitHelper.getAdmobStatus());
-        Log.e(ServerAdConstants.AD_LOG_TAG, "fb rect banner status : " + adUnitHelper.getFbStatus());
-        Log.e(ServerAdConstants.AD_LOG_TAG, "chartboost rect banner status : " + adUnitHelper.getChartStatus());
+        Log.e(ServerAdConstants.AD_LOG_TAG, "AdMob rect banner status : " + adUnitHelper.getAdmobStatus());
+        Log.e(ServerAdConstants.AD_LOG_TAG, "FB rect banner status : " + adUnitHelper.getFbStatus());
+        Log.e(ServerAdConstants.AD_LOG_TAG, "Unity rect banner status : " + adUnitHelper.getUnityStatus());
+        Log.e(ServerAdConstants.AD_LOG_TAG, "ChartBoost rect banner status : " + adUnitHelper.getChartStatus());
     }
 
     private void setAdmobRectangleBanner(){
-        Log.d(ServerAdConstants.AD_LOG_TAG, "calling admob banner");
+
+        Log.d(ServerAdConstants.AD_LOG_TAG, "calling AdMob banner");
         admobAdView = new AdView(mActivity);
         admobAdView.setAdSize(com.google.android.gms.ads.AdSize.MEDIUM_RECTANGLE);
         admobAdView.setAdUnitId(adUnitHelper.getAdmobBanner());
@@ -98,7 +115,7 @@ public class BannerRecAd {
             public void onAdLoaded() {
                 super.onAdLoaded();
                 admobStatus = true;
-                Log.e(ServerAdConstants.AD_LOG_TAG, "admob rec banner loaded");
+                Log.e(ServerAdConstants.AD_LOG_TAG, "AdMob rec banner loaded");
                 checkLogValues();
                 showRecBanner(splashIsGone);
             }
@@ -107,9 +124,12 @@ public class BannerRecAd {
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
                 admobStatus = false;
-                Log.e(ServerAdConstants.AD_LOG_TAG, "admob rec banner not loaded");
+                Log.e(ServerAdConstants.AD_LOG_TAG, "AdMob rec banner not loaded");
                 if (adUnitHelper.getFbStatus().equals(ServerAdConstants.STATUS_OK)){
                     setFbRectangleBanner();
+                }
+                else if (adUnitHelper.getUnityStatus().equals(ServerAdConstants.STATUS_OK)){
+                    setUnityRectangleBanner();
                 }
                 else if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
                     setChartBoostRecBanner();
@@ -163,10 +183,63 @@ public class BannerRecAd {
                 .build());
     }
 
+    private void setUnityRectangleBanner() {
+
+
+        BannerConfiguration.Builder builder = new BannerConfiguration
+                .Builder(adUnitHelper.getUnityBanner(),
+                new BannerSize(320, 250),
+                new BannerShowListener() {
+                    @Override
+                    public void onImpression(@NonNull BannerAd bannerAd) {
+                        Log.e(ServerAdConstants.AD_LOG_TAG, "Unity rec banner loaded");
+                        checkLogValues();
+
+                    }
+
+                    @Override
+                    public void onClicked(@NonNull BannerAd bannerAd) {
+
+                    }
+
+                    @Override
+                    public void onFailedToShow(@NonNull BannerAd bannerAd, @NonNull UnityAdsError unityAdsError) {
+
+                        unityStatus = false;
+
+                        Log.e(ServerAdConstants.AD_LOG_TAG, "Unity banner not loaded");
+                        adContainer.removeAllViews();
+                        if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
+                            setChartBoostRecBanner();
+                        }
+                        else {
+                            setAdmobRectangleBanner();
+                        }
+                    }
+                });
+
+        BannerAd.load(builder.build(), new LoadListener<BannerAd>() {
+            @Override
+            public void onAdLoaded(@Nullable BannerAd bannerAd, @Nullable UnityAdsError unityAdsError) {
+                if (unityAdsError == null){
+                    unityStatus = true;
+                    unityRecBanner = bannerAd;
+                    showRecBanner(splashIsGone);
+                }
+            }
+        });
+
+    }
+
     private void setChartBoostRecBanner(){
         Log.d(ServerAdConstants.AD_LOG_TAG, "calling chartBoost banner");
 
         BannerCallback bannerCallback = new BannerCallback() {
+            @Override
+            public void onAdExpired(@NonNull ExpirationEvent expirationEvent) {
+
+            }
+
             @Override
             public void onAdLoaded(@NonNull CacheEvent cacheEvent, @Nullable CacheError cacheError) {
 
@@ -228,12 +301,18 @@ public class BannerRecAd {
         if (splashIsGone){
             if (admobStatus){
                 adContainer.addView(admobAdView);
-                Log.e(ServerAdConstants.AD_LOG_TAG,"admob banner showed");
+                Log.e(ServerAdConstants.AD_LOG_TAG,"AdMob banner showed");
             }
             else if (fbStatus){
                 // Add the ad view to your activity layout
                 adContainer.addView(fbAdView);
                 Log.e(ServerAdConstants.AD_LOG_TAG,"fb banner showed");
+            }
+            else if (unityStatus){
+                // Add the ad view to your activity layout
+                if (unityRecBanner != null){ adContainer.addView(unityRecBanner.getView()); }
+
+                Log.e(ServerAdConstants.AD_LOG_TAG,"unity banner showed");
             }
             else if (cbStatus){
                 Log.e(ServerAdConstants.AD_LOG_TAG,"cb banner showed");

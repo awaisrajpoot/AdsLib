@@ -15,6 +15,7 @@ import com.chartboost.sdk.events.CacheEvent;
 import com.chartboost.sdk.events.ClickError;
 import com.chartboost.sdk.events.ClickEvent;
 import com.chartboost.sdk.events.DismissEvent;
+import com.chartboost.sdk.events.ExpirationEvent;
 import com.chartboost.sdk.events.ImpressionEvent;
 import com.chartboost.sdk.events.ShowError;
 import com.chartboost.sdk.events.ShowEvent;
@@ -188,6 +189,11 @@ public class AppInterstitialAd implements IUnityAdsInitializationListener {
 
     private void loadChartBoostAd(){
         chartboostInterstitial = new Interstitial("location", new InterstitialCallback() {
+            @Override
+            public void onAdExpired(@NonNull ExpirationEvent expirationEvent) {
+
+            }
+
             @Override
             public void onAdDismiss(@NonNull DismissEvent dismissEvent) {
 

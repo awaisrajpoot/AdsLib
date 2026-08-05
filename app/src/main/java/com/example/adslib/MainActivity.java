@@ -17,7 +17,8 @@ import com.example.mylibrary.AdsInitializer;
 import com.example.mylibrary.LibHelpers.AdUnitHelper;
 import com.example.mylibrary.LibHelpers.FileNameCreator;
 
-public class MainActivity extends AppCompatActivity implements AdsInitializer.AdsInitCompleteListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements AdsInitializer.AdsInitCompleteListener,
+        View.OnClickListener {
 
     AdsInitializer adsInitializer;
 
@@ -27,8 +28,8 @@ public class MainActivity extends AppCompatActivity implements AdsInitializer.Ad
     TextView simpleBannerBtn, largeBannerBtn;
 
     public static String FILE_KEY = "ads_file_key";
-
     AppInterstitialAd interstitialAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,4 +93,5 @@ public class MainActivity extends AppCompatActivity implements AdsInitializer.Ad
             interstitialAd.showLoadedInterstitial();
         }
     }
+
 }

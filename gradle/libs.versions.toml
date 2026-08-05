@@ -1,23 +1,26 @@
 [versions]
-agp = "8.4.1"
-gson = "2.10.1"
+agp = "8.13.2"
+
+gson = "2.14.0"
 junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-appcompat = "1.7.0"
-material = "1.12.0"
-activity = "1.9.1"
-constraintlayout = "2.1.4"
-playServicesAds = "23.2.0"
-playServicesAdsIdentifier = "18.1.0"
-playServicesBase = "18.5.0"
-sdpAndroid = "1.1.0"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+appcompat = "1.7.1"
+material = "1.14.0"
+activity = "1.13.0"
+constraintlayout = "2.2.2"
+
+sdpAndroid = "1.1.1"
 volley = "1.2.1"
 
-audienceNetworkSdk = "6.17.0"
-chartboostSdk = "9.0.0"
-facebook = "6.17.0.0"
-unityAds = "4.5.0"
+playServicesAds = "25.4.0"
+playServicesAdsIdentifier = "18.3.0"
+playServicesBase = "18.10.0"
+
+audienceNetworkSdk = "6.22.0"
+chartboostSdk = "9.12.1"
+facebook = "6.22.0.0"
+unityAds = "4.19.0"
 
 
 [libraries]
