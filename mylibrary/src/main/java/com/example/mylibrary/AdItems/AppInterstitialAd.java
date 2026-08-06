@@ -31,11 +31,16 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.unity3d.ads.IUnityAdsInitializationListener;
 import com.unity3d.ads.IUnityAdsLoadListener;
 import com.unity3d.ads.IUnityAdsShowListener;
+import com.unity3d.ads.InterstitialShowListener;
+import com.unity3d.ads.LoadConfiguration;
+import com.unity3d.ads.ShowConfiguration;
+import com.unity3d.ads.ShowFinishState;
 import com.unity3d.ads.UnityAds;
+import com.unity3d.ads.UnityAdsError;
 import com.unity3d.ads.UnityAdsShowOptions;
 
 
-public class AppInterstitialAd implements IUnityAdsInitializationListener {
+public class AppInterstitialAd {
 
 
     private AppCompatActivity mActivity;
@@ -45,12 +50,11 @@ public class AppInterstitialAd implements IUnityAdsInitializationListener {
     //facebook ad
     InterstitialAdListener fbInterstitialAdListener;
     private InterstitialAd fbInterstitialAd;
+    //Unity ad
+    com.unity3d.ads.InterstitialAd unityInterstitial;
     //chartBoost ad
     Interstitial chartboostInterstitial = null;
 
-    //unity deprecate its "onReady"
-    //so set the value true of "unityAdLoaded", it help to show the unity ads on desire time
-    public boolean unityAdLoaded = false;
     private AdUnitHelper adUnitHelper;
 
 
@@ -60,10 +64,10 @@ public class AppInterstitialAd implements IUnityAdsInitializationListener {
     }
 
     private void checkLogValues(){
-        Log.e("app_ads", "admob inter status : " + adUnitHelper.getAdmobStatus());
+        Log.e("app_ads", "AdMob inter status : " + adUnitHelper.getAdmobStatus());
         Log.e("app_ads", "fb inter status : " + adUnitHelper.getFbStatus());
         Log.e("app_ads", "unity inter status : " + adUnitHelper.getUnityStatus());
-        Log.e("app_ads", "chartboost inter status : " + adUnitHelper.getChartStatus());
+        Log.e("app_ads", "ChartBoost inter status : " + adUnitHelper.getChartStatus());
     }
 
     public void loadAd(){
@@ -82,7 +86,7 @@ public class AppInterstitialAd implements IUnityAdsInitializationListener {
     }
 
     private void loadAdmobAd(){
-        Log.d(ServerAdConstants.AD_LOG_TAG, "calling admob interstitial");
+        Log.d(ServerAdConstants.AD_LOG_TAG, "calling AdMob interstitial");
         AdRequest adRequest = new AdRequest.Builder().build();
 
         com.google.android.gms.ads.interstitial.InterstitialAd
@@ -93,12 +97,12 @@ public class AppInterstitialAd implements IUnityAdsInitializationListener {
                 // The mInterstitialAd reference will be null until
                 // an ad is loaded.
                 admobInterstitial = interstitialAd;
-                Log.d(ServerAdConstants.AD_LOG_TAG, "admob interstitial loaded");
+                Log.d(ServerAdConstants.AD_LOG_TAG, "AdMob interstitial loaded");
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                Log.e(ServerAdConstants.AD_LOG_TAG, "admob interstitial not loaded");
+                Log.e(ServerAdConstants.AD_LOG_TAG, "AdMob interstitial not loaded");
                 checkLogValues();
                 // Handle the error
                 admobInterstitial = null;
@@ -179,12 +183,36 @@ public class AppInterstitialAd implements IUnityAdsInitializationListener {
     //because we have to pass it,s ad load listener as parameter to it "initialize" function
     //and don,t forget to check "showListener". just for reloading purpose, for other company ads
     private void loadUnityAd(){
-        UnityAds.initialize (mActivity.getApplicationContext()
-                //unity app id
-                , adUnitHelper.getUnityId()
-                //unity ads status in test mode or not
-                , Boolean.parseBoolean(adUnitHelper.getUnityTestMode()),
-                this);
+
+        LoadConfiguration configuration = new LoadConfiguration
+                .Builder(adUnitHelper.getUnityInter()).build();
+
+        com.unity3d.ads.InterstitialAd
+                .load(configuration, (interstitialAd, error) -> {
+
+                    if (interstitialAd != null) {
+                        // Ad loaded successfully, ready to be shown
+                        Log.d(ServerAdConstants.AD_LOG_TAG, "Unity interstitial loaded");
+
+                        this.unityInterstitial = interstitialAd;
+
+                        interstitialAd.setOnAdExpired(expiredAd -> {
+                            Log.e(ServerAdConstants.AD_LOG_TAG, "Unity interstitial expired");
+                            this.unityInterstitial = null;
+                            this.loadAd();
+                        });
+                    } else {
+                        Log.e(ServerAdConstants.AD_LOG_TAG, "Unity interstitial not loaded");
+
+                        if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
+                            loadChartBoostAd();
+                        }
+                        else {
+                            loadAd();
+                        }
+                    }
+        });
+
     }
 
     private void loadChartBoostAd(){
@@ -238,19 +266,23 @@ public class AppInterstitialAd implements IUnityAdsInitializationListener {
 
         if(admobInterstitial !=null &&
                 adUnitHelper.getAdmobStatus().equals(ServerAdConstants.STATUS_OK)){//showing admob ad if loaded
+
             admobInterstitial.show(mActivity);
         }
-        else if(fbInterstitialAd!=null && fbInterstitialAd.isAdLoaded() &&
+        else if(fbInterstitialAd!=null &&
+                fbInterstitialAd.isAdLoaded() &&
                 adUnitHelper.getFbStatus().equals(ServerAdConstants.STATUS_OK)){
+
             fbInterstitialAd.show();
         }
-        else if(unityAdLoaded && adUnitHelper.getUnityStatus()
-                .equals(ServerAdConstants.STATUS_OK)){
-            UnityAds.show(mActivity,
-                    //unity interstitial ad id
-                    adUnitHelper.getUnityInter(), new UnityAdsShowOptions(), showListener);
+        else if(unityInterstitial!=null &&
+                adUnitHelper.getUnityStatus().equals(ServerAdConstants.STATUS_OK)){
+
+            showUnityInterstitial(unityInterstitial);
         }
-        else if(chartboostInterstitial != null && adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)) {
+        else if(chartboostInterstitial != null &&
+                adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)) {
+
             chartboostInterstitial.show();
         }
         else {
@@ -259,67 +291,38 @@ public class AppInterstitialAd implements IUnityAdsInitializationListener {
     }
 
 
-    //After unity initialization we can load the unity ad, it,s the best way
-    @Override
-    public void onInitializationComplete() {
-        UnityAds.load(
-                //unity interstitial ad id
-                adUnitHelper.getUnityInter(), new IUnityAdsLoadListener() {
-            @Override
-            public void onUnityAdsAdLoaded(String s) {
-                Log.v("UnityAdsExample", "unity inter ad loaded");
-                unityAdLoaded = true;
-            }
+    private void showUnityInterstitial(com.unity3d.ads.InterstitialAd interstitialAd){
 
-            @Override
-            public void onUnityAdsFailedToLoad(String s, UnityAds.UnityAdsLoadError unityAdsLoadError, String s1) {
-                Log.v("UnityAdsExample", "unity inter ad not loaded : " + s1);
-                unityAdLoaded = false;
-            }
-        });
+        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial lets show");
+
+        interstitialAd.show(mActivity,
+                new ShowConfiguration.Builder().build(),
+                new InterstitialShowListener() {
+                    @Override
+                    public void onStarted(com.unity3d.ads.InterstitialAd interstitialAd) {
+                        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial start showing");
+                        loadAd();
+                    }
+
+                    @Override
+                    public void onClicked(com.unity3d.ads.InterstitialAd interstitialAd) {
+                        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial clicked");
+                    }
+
+                    @Override
+                    public void onCompleted(com.unity3d.ads.InterstitialAd interstitialAd, @NonNull ShowFinishState showFinishState) {
+                        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial completed");
+
+                    }
+
+                    @Override
+                    public void onFailed(com.unity3d.ads.InterstitialAd interstitialAd, @NonNull UnityAdsError unityAdsError) {
+                        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial failed to show");
+                        loadAd();
+                    }
+                });
+
     }
 
-    @Override
-    public void onInitializationFailed(UnityAds.UnityAdsInitializationError unityAdsInitializationError, String s) {
-
-    }
-
-    private IUnityAdsShowListener showListener = new IUnityAdsShowListener() {
-        @Override
-        public void onUnityAdsShowFailure(String placementId, UnityAds.UnityAdsShowError error, String message) {
-            Log.e("UnityAdsExample", "Unity Ads failed to show ad for " + placementId + " with error: [" + error + "] " + message);
-            if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
-                loadChartBoostAd();
-            }
-            else {
-                Log.d(ServerAdConstants.AD_LOG_TAG, "unity interstitial not loaded");
-                checkLogValues();
-                loadAd();
-            }
-        }
-
-        @Override
-        public void onUnityAdsShowStart(String placementId) {
-            Log.v("UnityAdsExample", "onUnityAdsShowStart: " + placementId);
-            if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
-                loadChartBoostAd();
-            }
-            else {
-                loadAd();
-            }
-        }
-
-        @Override
-        public void onUnityAdsShowClick(String placementId) {
-            Log.v("UnityAdsExample", "onUnityAdsShowClick: " + placementId);
-
-        }
-
-        @Override
-        public void onUnityAdsShowComplete(String placementId, UnityAds.UnityAdsShowCompletionState state) {
-            Log.v("UnityAdsExample", "onUnityAdsShowComplete: " + placementId);
-
-        }
-    };
 
 }

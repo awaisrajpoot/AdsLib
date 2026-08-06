@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements AdsInitializer.Ad
     String fileName = "";
     FileNameCreator fileNameCreator;
 
-    TextView simpleBannerBtn, largeBannerBtn;
+    TextView simpleBannerBtn, largeBannerBtn, interAdBtn;
 
     public static String FILE_KEY = "ads_file_key";
     AppInterstitialAd interstitialAd;
@@ -41,9 +41,11 @@ public class MainActivity extends AppCompatActivity implements AdsInitializer.Ad
 
         simpleBannerBtn = findViewById(R.id.simpleBannerBtn);
         largeBannerBtn = findViewById(R.id.largeBannerBtn);
+        interAdBtn = findViewById(R.id.interAdBtn);
 
         simpleBannerBtn.setOnClickListener(this);
         largeBannerBtn.setOnClickListener(this);
+        interAdBtn.setOnClickListener(this);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -92,6 +94,11 @@ public class MainActivity extends AppCompatActivity implements AdsInitializer.Ad
 
             interstitialAd.showLoadedInterstitial();
         }
+
+        else if (id==R.id.interAdBtn) {
+            interstitialAd.showLoadedInterstitial();
+        }
+
     }
 
 }
