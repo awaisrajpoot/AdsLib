@@ -138,7 +138,7 @@ public class AppInterstitialAd {
 
             @Override
             public void onInterstitialDismissed(Ad ad) {
-                loadAdmobAd();
+                loadAd();
             }
 
             @Override
@@ -219,12 +219,12 @@ public class AppInterstitialAd {
         chartboostInterstitial = new Interstitial("location", new InterstitialCallback() {
             @Override
             public void onAdExpired(@NonNull ExpirationEvent expirationEvent) {
-
+                loadAd();
             }
 
             @Override
             public void onAdDismiss(@NonNull DismissEvent dismissEvent) {
-
+                loadAd();
             }
 
             @Override
@@ -290,7 +290,6 @@ public class AppInterstitialAd {
         }
     }
 
-
     private void showUnityInterstitial(com.unity3d.ads.InterstitialAd interstitialAd){
 
         Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial lets show");
@@ -323,6 +322,5 @@ public class AppInterstitialAd {
                 });
 
     }
-
 
 }
