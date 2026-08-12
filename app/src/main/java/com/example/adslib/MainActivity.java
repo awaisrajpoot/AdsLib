@@ -61,6 +61,13 @@ public class MainActivity extends AppCompatActivity implements AdsInitializer.Ad
         Log.i("file_data","MainActivity : file name is : " + fileName);
         adsInitializer = new AdsInitializer(MainActivity.this,
                 AppConstants.adsUrl, AppConstants.metaLink,fileName);
+
+        findViewById(R.id.interAdBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                interstitialAd.showLoadedInterstitial();
+            }
+        });
     }
 
     @Override
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements AdsInitializer.Ad
         bannerRecAd.showRecBanner(true);
 
         interstitialAd = new AppInterstitialAd(MainActivity.this, adUnitHelper);
-        interstitialAd.loadAd();
+        //interstitialAd.loadAd();
     }
 
     @Override
@@ -92,10 +99,6 @@ public class MainActivity extends AppCompatActivity implements AdsInitializer.Ad
             intent.putExtra(FILE_KEY, fileName);
             startActivity(intent);
 
-            interstitialAd.showLoadedInterstitial();
-        }
-
-        else if (id==R.id.interAdBtn) {
             interstitialAd.showLoadedInterstitial();
         }
 

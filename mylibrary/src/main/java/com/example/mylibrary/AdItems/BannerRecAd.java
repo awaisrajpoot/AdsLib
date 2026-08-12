@@ -1,5 +1,6 @@
 package com.example.mylibrary.AdItems;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -36,6 +37,8 @@ import com.unity3d.ads.LoadListener;
 import com.unity3d.ads.UnityAdsError;
 import com.unity3d.services.banners.BannerView;
 import com.unity3d.services.banners.UnityBannerSize;
+
+import java.util.logging.LogRecord;
 
 
 public class BannerRecAd {
@@ -135,7 +138,7 @@ public class BannerRecAd {
                     setChartBoostRecBanner();
                 }
                 else {
-                    setAdmobRectangleBanner();
+                    adRequestCaller();
                 }
             }
         });
@@ -154,11 +157,24 @@ public class BannerRecAd {
                     public void onError(Ad ad, AdError adError) {
                         fbStatus = false;
                         Log.e(ServerAdConstants.AD_LOG_TAG, "facebook rec banner not loaded");
-                        if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
+                        Log.e(ServerAdConstants.AD_LOG_TAG, "Facebook Error : " + adError.getErrorMessage());
+
+                        if (adUnitHelper.getUnityStatus().equals(ServerAdConstants.STATUS_OK)){
+                            setUnityRectangleBanner();
+                        }
+                        else if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
                             setChartBoostRecBanner();
                         }
                         else {
-                            setAdmobRectangleBanner();
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adRequestCaller();
+                                }
+                            },8000);
+
+
                         }
                     }
 
@@ -209,11 +225,12 @@ public class BannerRecAd {
 
                         Log.e(ServerAdConstants.AD_LOG_TAG, "Unity banner not loaded");
                         adContainer.removeAllViews();
+
                         if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
                             setChartBoostRecBanner();
                         }
                         else {
-                            setAdmobRectangleBanner();
+                            adRequestCaller();
                         }
                     }
                 });
@@ -252,7 +269,7 @@ public class BannerRecAd {
                     showRecBanner(splashIsGone);
                 }else {
                     Log.e(ServerAdConstants.AD_LOG_TAG, "chartBoost rec banner not loaded");
-                    setAdmobRectangleBanner();
+                    adRequestCaller();
                 }
 
             }
@@ -270,7 +287,7 @@ public class BannerRecAd {
                     if (showError.getCode().equals(ShowError.Code.NO_CACHED_AD)){
                         Log.e(ServerAdConstants.AD_LOG_TAG,"rec cb banner no cache");
                         cbStatus = false;
-                        setAdmobRectangleBanner();
+                        adRequestCaller();
                     }
 
                 }

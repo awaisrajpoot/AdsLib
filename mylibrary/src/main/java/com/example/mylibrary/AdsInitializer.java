@@ -17,6 +17,7 @@ import com.example.mylibrary.LibHelpers.SavedFileChecker;
 import com.example.mylibrary.ServerHelpers.JsonDataDownloader;
 import com.example.mylibrary.ServerHelpers.PkgDownloader;
 import com.example.mylibrary.ServerHelpers.UpdateCodeHelper;
+import com.facebook.ads.AdSettings;
 
 import java.io.File;
 

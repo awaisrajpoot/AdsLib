@@ -10,6 +10,8 @@ import com.chartboost.sdk.callbacks.StartCallback;
 import com.chartboost.sdk.events.StartError;
 import com.example.mylibrary.LibHelpers.AdUnitHelper;
 import com.example.mylibrary.LibHelpers.ServerAdConstants;
+import com.facebook.ads.AdSettings;
+import com.facebook.ads.AudienceNetworkAds;
 import com.unity3d.ads.InitializationConfiguration;
 import com.unity3d.ads.InitializationListener;
 import com.unity3d.ads.UnityAds;
@@ -34,6 +36,10 @@ public class AllSdkInitializer {
             new ReplaceAdsMeta(compatActivity).replaceAdmobMeta(adUnitHelper.getAdmobId());
         }
 
+        if (adUnitHelper.getFbStatus().equals(ServerAdConstants.STATUS_OK)){
+            facebookInitializer();
+        }
+
         if (adUnitHelper.getUnityStatus().equals(ServerAdConstants.STATUS_OK)) {
             unityInitializer();
         }
@@ -42,6 +48,12 @@ public class AllSdkInitializer {
             chartBoostInitializer();
         }
 
+    }
+
+    private void facebookInitializer() {
+        //AdSettings.addTestDevice("YOUR_HASHED_DEVICE_ID");
+        AdSettings.addTestDevice("1239ee92-33b2-4d74-996a-56f616505251");
+        AudienceNetworkAds.initialize(compatActivity);
     }
 
 

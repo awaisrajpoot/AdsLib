@@ -268,6 +268,9 @@ public class AppInterstitialAd {
                 adUnitHelper.getAdmobStatus().equals(ServerAdConstants.STATUS_OK)){//showing admob ad if loaded
 
             admobInterstitial.show(mActivity);
+
+            //need to load ad, because admob listener does not have "Ad On Close" function
+            loadAd();
         }
         else if(fbInterstitialAd!=null &&
                 fbInterstitialAd.isAdLoaded() &&

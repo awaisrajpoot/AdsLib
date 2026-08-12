@@ -126,7 +126,7 @@ public class SimpleBannerAd {
                 }
 
                 else {
-                    setAdmobBanner();
+                    adRequestCaller();
                 }
                 Log.e("admob_banner",loadAdError.toString());
             }
@@ -146,7 +146,9 @@ public class SimpleBannerAd {
                 .withAdListener(new com.facebook.ads.AdListener() {
                     @Override
                     public void onError(Ad ad, AdError adError) {
-                        Log.e(ServerAdConstants.AD_LOG_TAG,"fb banner not loaded");
+                        Log.e(ServerAdConstants.AD_LOG_TAG,"fb simple banner not loaded");
+                        Log.e(ServerAdConstants.AD_LOG_TAG, "Facebook Error : " + adError.getErrorMessage());
+
                         if (adUnitHelper.getUnityStatus().equals(ServerAdConstants.STATUS_OK)){
                             setUnityBanner();
                         }
@@ -154,7 +156,7 @@ public class SimpleBannerAd {
                             setChartBoostBanner();
                         }
                         else {
-                            setAdmobBanner();
+                            adRequestCaller();
                         }
                     }
 
@@ -203,7 +205,7 @@ public class SimpleBannerAd {
                             setChartBoostBanner();
                         }
                         else {
-                            setAdmobBanner();
+                            adRequestCaller();
                         }
 
                     }
@@ -247,7 +249,7 @@ public class SimpleBannerAd {
                     checkLogValues();
                 }else {
                     Log.e(ServerAdConstants.AD_LOG_TAG, "chartBoost banner not loaded");
-                    setAdmobBanner();
+                    adRequestCaller();
                 }
 
             }
@@ -264,7 +266,7 @@ public class SimpleBannerAd {
                 if (showError!=null){
                     if (showError.getCode().equals(ShowError.Code.NO_CACHED_AD)){
                         Log.e("cb_test","rec banner no cache");
-                        setAdmobBanner();
+                        adRequestCaller();
                     }
 
                 }

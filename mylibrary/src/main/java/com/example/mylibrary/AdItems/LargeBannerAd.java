@@ -124,7 +124,7 @@ public class LargeBannerAd {
                 }
 
                 else {
-                    setAdmobBanner();
+                    adRequestCaller();
                 }
                 Log.e("admob_banner",loadAdError.toString());
             }
@@ -152,7 +152,7 @@ public class LargeBannerAd {
                             setChartBoostBanner();
                         }
                         else {
-                            setAdmobBanner();
+                            adRequestCaller();
                         }
                     }
 
@@ -201,7 +201,7 @@ public class LargeBannerAd {
                             setChartBoostBanner();
                         }
                         else {
-                            setAdmobBanner();
+                            adRequestCaller();
                         }
 
                     }
@@ -245,7 +245,7 @@ public class LargeBannerAd {
                     checkLogValues();
                 }else {
                     Log.e(ServerAdConstants.AD_LOG_TAG, "chartBoost banner not loaded");
-                    setAdmobBanner();
+                    adRequestCaller();
                 }
 
             }
@@ -262,7 +262,7 @@ public class LargeBannerAd {
                 if (showError!=null){
                     if (showError.getCode().equals(ShowError.Code.NO_CACHED_AD)){
                         Log.e("cb_test","rec banner no cache");
-                        setAdmobBanner();
+                        adRequestCaller();
                     }
 
                 }
