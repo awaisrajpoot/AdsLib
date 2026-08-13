@@ -62,7 +62,7 @@ project.afterEvaluate {
             mavenJava(MavenPublication) {
                 setGroupId 'com.example'
                 setArtifactId 'mylibrary'
-                version '1.1.5'
+                version '1.1.6'
                 artifact bundleReleaseAar
             }
         }
