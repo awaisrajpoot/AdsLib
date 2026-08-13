@@ -60,10 +60,13 @@ public class BannerRecAd {
     private boolean cbStatus = false;
     private boolean startAppStatus = false;
     private boolean splashIsGone = false;
+    private Handler handler;
 
     public BannerRecAd(AppCompatActivity mActivity, AdUnitHelper adUnitHelper, RectBannerView adContainer){
         this.mActivity = mActivity;
         this.adUnitHelper = adUnitHelper;
+
+        this.handler = new Handler();
 
         this.adContainer = adContainer;
         getContainer();
@@ -91,6 +94,17 @@ public class BannerRecAd {
         else {
             adContainer.setVisibility(View.GONE);
         }
+    }
+
+    public void reloadAd(){
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(ServerAdConstants.AD_LOG_TAG, "Lets Reload Rec Banner Ad");
+                adRequestCaller();
+            }
+        }, adUnitHelper.getReloadTime());
     }
 
     private void checkLogValues(){
@@ -138,7 +152,7 @@ public class BannerRecAd {
                     setChartBoostRecBanner();
                 }
                 else {
-                    adRequestCaller();
+                    reloadAd();
                 }
             }
         });
@@ -166,15 +180,7 @@ public class BannerRecAd {
                             setChartBoostRecBanner();
                         }
                         else {
-
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adRequestCaller();
-                                }
-                            },8000);
-
-
+                            reloadAd();
                         }
                     }
 
@@ -230,7 +236,7 @@ public class BannerRecAd {
                             setChartBoostRecBanner();
                         }
                         else {
-                            adRequestCaller();
+                            reloadAd();
                         }
                     }
                 });
@@ -269,7 +275,7 @@ public class BannerRecAd {
                     showRecBanner(splashIsGone);
                 }else {
                     Log.e(ServerAdConstants.AD_LOG_TAG, "chartBoost rec banner not loaded");
-                    adRequestCaller();
+                    reloadAd();
                 }
 
             }
@@ -287,7 +293,7 @@ public class BannerRecAd {
                     if (showError.getCode().equals(ShowError.Code.NO_CACHED_AD)){
                         Log.e(ServerAdConstants.AD_LOG_TAG,"rec cb banner no cache");
                         cbStatus = false;
-                        adRequestCaller();
+                        reloadAd();
                     }
 
                 }

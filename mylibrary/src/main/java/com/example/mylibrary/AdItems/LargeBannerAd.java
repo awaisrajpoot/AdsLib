@@ -1,5 +1,6 @@
 package com.example.mylibrary.AdItems;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -48,6 +49,8 @@ public class LargeBannerAd {
     private com.facebook.ads.AdView fbAdView;
     private BannerAd unityBannerView;
     private com.chartboost.sdk.ads.Banner chartBoostBanner;
+
+    private Handler handler;
     private AdUnitHelper adUnitHelper;
 
 
@@ -56,6 +59,7 @@ public class LargeBannerAd {
         this.adUnitHelper = adUnitHelper;
         this.adContainer = adContainer;
 
+        this.handler = new Handler();
         getContainer();//calling ad container
     }
 
@@ -66,10 +70,10 @@ public class LargeBannerAd {
     }
 
     private void checkLogValues(){
-        Log.e("app_ads", "admob banner status : " + adUnitHelper.getAdmobStatus());
-        Log.e("app_ads", "fb banner status : " + adUnitHelper.getFbStatus());
-        Log.e("app_ads", "unity banner status : " + adUnitHelper.getUnityStatus());
-        Log.e("app_ads", "chartboost banner status : " + adUnitHelper.getChartStatus());
+        Log.e("app_ads", "AdMob banner status : " + adUnitHelper.getAdmobStatus());
+        Log.e("app_ads", "Facebook banner status : " + adUnitHelper.getFbStatus());
+        Log.e("app_ads", "Unity banner status : " + adUnitHelper.getUnityStatus());
+        Log.e("app_ads", "ChartBoost banner status : " + adUnitHelper.getChartStatus());
     }
 
     public void adRequestCaller(){
@@ -90,8 +94,19 @@ public class LargeBannerAd {
         }
     }
 
+    public void reloadAd(){
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(ServerAdConstants.AD_LOG_TAG, "Lets Reload Large Banner Ad");
+                adRequestCaller();
+            }
+        }, adUnitHelper.getReloadTime());
+    }
+
     private void setAdmobBanner(){
-        Log.d(ServerAdConstants.AD_LOG_TAG, "calling admob banner loaded");
+        Log.d(ServerAdConstants.AD_LOG_TAG, "calling AdMob banner loaded");
         admobAdView = new AdView(mActivity);
         admobAdView.setAdSize(com.google.android.gms.ads.AdSize.LARGE_BANNER);
         admobAdView.setAdUnitId(adUnitHelper.getAdmobBanner());
@@ -105,14 +120,14 @@ public class LargeBannerAd {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                Log.e(ServerAdConstants.AD_LOG_TAG,"admob banner loaded");
+                Log.e(ServerAdConstants.AD_LOG_TAG,"AdMob banner loaded");
                 checkLogValues();
             }
 
             @Override
             public void onAdFailedToLoad(LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                Log.e(ServerAdConstants.AD_LOG_TAG,"admob banner not loaded");
+                Log.e(ServerAdConstants.AD_LOG_TAG,"AdMob banner not loaded");
                 if (adUnitHelper.getFbStatus().equals(ServerAdConstants.STATUS_OK)){
                     setFbBanner();
                 }
@@ -124,7 +139,7 @@ public class LargeBannerAd {
                 }
 
                 else {
-                    adRequestCaller();
+                    reloadAd();
                 }
                 Log.e("admob_banner",loadAdError.toString());
             }
@@ -144,7 +159,7 @@ public class LargeBannerAd {
                 .withAdListener(new com.facebook.ads.AdListener() {
                     @Override
                     public void onError(Ad ad, AdError adError) {
-                        Log.e(ServerAdConstants.AD_LOG_TAG,"fb banner not loaded");
+                        Log.e(ServerAdConstants.AD_LOG_TAG,"fb large banner not loaded");
                         if (adUnitHelper.getUnityStatus().equals(ServerAdConstants.STATUS_OK)){
                             setUnityBanner();
                         }
@@ -152,7 +167,7 @@ public class LargeBannerAd {
                             setChartBoostBanner();
                         }
                         else {
-                            adRequestCaller();
+                            reloadAd();
                         }
                     }
 
@@ -201,7 +216,7 @@ public class LargeBannerAd {
                             setChartBoostBanner();
                         }
                         else {
-                            adRequestCaller();
+                            reloadAd();
                         }
 
                     }
@@ -245,7 +260,7 @@ public class LargeBannerAd {
                     checkLogValues();
                 }else {
                     Log.e(ServerAdConstants.AD_LOG_TAG, "chartBoost banner not loaded");
-                    adRequestCaller();
+                    reloadAd();
                 }
 
             }
@@ -262,7 +277,7 @@ public class LargeBannerAd {
                 if (showError!=null){
                     if (showError.getCode().equals(ShowError.Code.NO_CACHED_AD)){
                         Log.e("cb_test","rec banner no cache");
-                        adRequestCaller();
+                        reloadAd();
                     }
 
                 }

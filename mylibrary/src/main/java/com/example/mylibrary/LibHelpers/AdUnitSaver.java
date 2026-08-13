@@ -30,6 +30,7 @@ public class AdUnitSaver {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
             String adsStatus = jsonObject.get("ads_status").getAsString();
+            int reloadTime = jsonObject.get("reload_time").getAsInt();
 
             String admobId = jsonObject.get("admob_id").getAsString();
             String admobStatus = jsonObject.get("admob_status").getAsString();
@@ -54,6 +55,7 @@ public class AdUnitSaver {
 
             Log.e("app_ads",
                     "ads status : " + adsStatus + "\n" +
+                            "reload time : " + reloadTime + "\n" +
                             "admob id : " + admobId + "\n" +
                             "admob status : " + admobStatus + "\n" +
                             "admob banner : " + admobBanner + "\n" +
@@ -83,6 +85,7 @@ public class AdUnitSaver {
                     && chartStatus!=null && chartId!=null && chartSignature!=null && chartSdkStatus!=null){
 
                 adUnitHelper.setAdsStatus(adsStatus);
+                adUnitHelper.setReloadTime(reloadTime);
 
                 adUnitHelper.setAdmobStatus(admobStatus);
                 adUnitHelper.setAdmobId(admobId);

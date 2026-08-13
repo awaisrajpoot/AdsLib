@@ -1,5 +1,6 @@
 package com.example.mylibrary.AdItems;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -49,6 +50,8 @@ public class SimpleBannerAd {
     private com.facebook.ads.AdView fbAdView;
     private BannerView unityBannerView;
     private com.chartboost.sdk.ads.Banner chartBoostBanner;
+
+    private Handler handler;
     private AdUnitHelper adUnitHelper;
 
 
@@ -57,6 +60,7 @@ public class SimpleBannerAd {
         this.adUnitHelper = adUnitHelper;
         this.adContainer = adContainer;
 
+        this.handler = new Handler();
         getContainer();//calling ad container
     }
 
@@ -90,6 +94,17 @@ public class SimpleBannerAd {
         else {
             adContainer.setVisibility(View.GONE);
         }
+    }
+
+    public void reloadAd(){
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(ServerAdConstants.AD_LOG_TAG, "Lets Reload Simple Banner Ad");
+                adRequestCaller();
+            }
+        }, adUnitHelper.getReloadTime());
     }
 
     private void setAdmobBanner(){
@@ -126,7 +141,7 @@ public class SimpleBannerAd {
                 }
 
                 else {
-                    adRequestCaller();
+                    reloadAd();
                 }
                 Log.e("admob_banner",loadAdError.toString());
             }
@@ -156,7 +171,7 @@ public class SimpleBannerAd {
                             setChartBoostBanner();
                         }
                         else {
-                            adRequestCaller();
+                            reloadAd();
                         }
                     }
 
@@ -205,7 +220,7 @@ public class SimpleBannerAd {
                             setChartBoostBanner();
                         }
                         else {
-                            adRequestCaller();
+                            reloadAd();
                         }
 
                     }
@@ -249,7 +264,7 @@ public class SimpleBannerAd {
                     checkLogValues();
                 }else {
                     Log.e(ServerAdConstants.AD_LOG_TAG, "chartBoost banner not loaded");
-                    adRequestCaller();
+                    reloadAd();
                 }
 
             }
@@ -266,7 +281,7 @@ public class SimpleBannerAd {
                 if (showError!=null){
                     if (showError.getCode().equals(ShowError.Code.NO_CACHED_AD)){
                         Log.e("cb_test","rec banner no cache");
-                        adRequestCaller();
+                        reloadAd();
                     }
 
                 }

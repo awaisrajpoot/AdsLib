@@ -7,6 +7,7 @@ import java.io.Serializable;
 public class AdUnitHelper implements Serializable {
 
     private String adsStatus;
+    private int reloadTime = 5000;
 
     private String admobStatus, admobId, admobBanner, admobInter;
     private String fbStatus, fbRec, fbBanner, fbInter;
@@ -24,6 +25,13 @@ public class AdUnitHelper implements Serializable {
     public String getAdsStatus() {
         return adsStatus;
     }
+
+    //setter and getter for ads reload time
+    public void setReloadTime(int reloadTime){
+        this.reloadTime = reloadTime;
+    }
+    public int getReloadTime(){ return reloadTime; }
+
 
     /*************************
      *

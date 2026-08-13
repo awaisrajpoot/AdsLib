@@ -2,6 +2,7 @@ package com.example.mylibrary.AdItems;
 
 import static com.facebook.ads.CacheFlag.ALL;
 
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -55,12 +56,15 @@ public class AppInterstitialAd {
     //chartBoost ad
     Interstitial chartboostInterstitial = null;
 
+    private Handler handler;
     private AdUnitHelper adUnitHelper;
 
 
     public AppInterstitialAd(AppCompatActivity mActivity, AdUnitHelper adUnitHelper) {
         this.mActivity = mActivity;
         this.adUnitHelper = adUnitHelper;
+
+        this.handler = new Handler();
     }
 
     private void checkLogValues(){
@@ -83,6 +87,17 @@ public class AppInterstitialAd {
         else if (adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)){
             loadChartBoostAd();
         }
+    }
+
+    public void reloadAd(){
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(ServerAdConstants.AD_LOG_TAG, "Lets Reload Interstitial Ads");
+                loadAd();
+            }
+        }, adUnitHelper.getReloadTime());
     }
 
     private void loadAdmobAd(){
@@ -116,7 +131,7 @@ public class AppInterstitialAd {
                     loadChartBoostAd();
                 }
                 else {
-                    loadAd();
+                    reloadAd();
                 }
                 Log.e("admob_banner",loadAdError.toString());
             }
@@ -138,12 +153,13 @@ public class AppInterstitialAd {
 
             @Override
             public void onInterstitialDismissed(Ad ad) {
-                loadAd();
+                reloadAd();
             }
 
             @Override
             public void onError(Ad ad, AdError adError) {
                 Log.e(ServerAdConstants.AD_LOG_TAG, "facebook interstitial not loaded");
+                Log.e(ServerAdConstants.AD_LOG_TAG, "facebook interstitial Error : " + adError.getErrorMessage());
                 checkLogValues();
                 if (adUnitHelper.getUnityStatus().equals(ServerAdConstants.STATUS_OK)){
                     loadUnityAd();
@@ -152,7 +168,7 @@ public class AppInterstitialAd {
                     loadChartBoostAd();
                 }
                 else {
-                    loadAd();
+                    reloadAd();
                 }
             }
 
@@ -199,7 +215,7 @@ public class AppInterstitialAd {
                         interstitialAd.setOnAdExpired(expiredAd -> {
                             Log.e(ServerAdConstants.AD_LOG_TAG, "Unity interstitial expired");
                             this.unityInterstitial = null;
-                            this.loadAd();
+                            this.reloadAd();
                         });
                     } else {
                         Log.e(ServerAdConstants.AD_LOG_TAG, "Unity interstitial not loaded");
@@ -208,7 +224,7 @@ public class AppInterstitialAd {
                             loadChartBoostAd();
                         }
                         else {
-                            loadAd();
+                            reloadAd();
                         }
                     }
         });
@@ -219,7 +235,7 @@ public class AppInterstitialAd {
         chartboostInterstitial = new Interstitial("location", new InterstitialCallback() {
             @Override
             public void onAdExpired(@NonNull ExpirationEvent expirationEvent) {
-                loadAd();
+                reloadAd();
             }
 
             @Override
@@ -236,7 +252,7 @@ public class AppInterstitialAd {
                 }else {
                     Log.e(ServerAdConstants.AD_LOG_TAG, "chartBoost not loaded");
                     checkLogValues();
-                    loadAd();
+                    reloadAd();
                 }
             }
 
@@ -270,7 +286,7 @@ public class AppInterstitialAd {
             admobInterstitial.show(mActivity);
 
             //need to load ad, because admob listener does not have "Ad On Close" function
-            loadAd();
+            reloadAd();
         }
         else if(fbInterstitialAd!=null &&
                 fbInterstitialAd.isAdLoaded() &&
@@ -289,7 +305,7 @@ public class AppInterstitialAd {
             chartboostInterstitial.show();
         }
         else {
-            loadAd();
+            reloadAd();
         }
     }
 
@@ -303,7 +319,7 @@ public class AppInterstitialAd {
                     @Override
                     public void onStarted(com.unity3d.ads.InterstitialAd interstitialAd) {
                         Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial start showing");
-                        loadAd();
+                        reloadAd();
                     }
 
                     @Override
@@ -320,7 +336,7 @@ public class AppInterstitialAd {
                     @Override
                     public void onFailed(com.unity3d.ads.InterstitialAd interstitialAd, @NonNull UnityAdsError unityAdsError) {
                         Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial failed to show");
-                        loadAd();
+                        reloadAd();
                     }
                 });
 
