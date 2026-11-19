@@ -52,7 +52,7 @@ public class AllSdkInitializer {
 
     private void facebookInitializer() {
         //AdSettings.addTestDevice("YOUR_HASHED_DEVICE_ID");
-        AdSettings.addTestDevice("1239ee92-33b2-4d74-996a-56f616505251");
+        AdSettings.addTestDevice("e3c5a961-4298-446e-b985-342f37b64f8f");
         AudienceNetworkAds.initialize(compatActivity);
     }
 
@@ -89,7 +89,7 @@ public class AllSdkInitializer {
                     @Override
                     public void onStartCompleted(@Nullable StartError startError) {
 
-                        Log.e(ServerAdConstants.AD_LOG_TAG,"cb initialization completed");
+                        Log.i(ServerAdConstants.AD_LOG_TAG,"cb initialization completed");
 
                         if (startError!=null){
 
@@ -104,7 +104,7 @@ public class AllSdkInitializer {
                             }
 
                         }else {
-                            Log.e(ServerAdConstants.AD_LOG_TAG,"cb startError is null");
+                            Log.d(ServerAdConstants.AD_LOG_TAG,"cb startError is null");
                         }
                     }
                 });

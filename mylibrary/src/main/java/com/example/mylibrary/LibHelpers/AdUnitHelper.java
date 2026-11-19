@@ -12,7 +12,7 @@ public class AdUnitHelper implements Serializable {
     private String admobStatus, admobId, admobBanner, admobInter;
     private String fbStatus, fbRec, fbBanner, fbInter;
     private String unityStatus, unityId, unityTestMode, unityBanner, unityInter;
-    private String chartStatus, chartId, chartSignature, chartSdkStatus;
+    private String chartStatus, chartId, chartSignature, chartSdkStatus, chartBanner, chartInter;
 
     public AdUnitHelper(){
         Log.d("app_ads", "ad units helper started.");
@@ -164,6 +164,8 @@ public class AdUnitHelper implements Serializable {
     public void setChartSignature(String chartSignature) {
         this.chartSignature = chartSignature;
     }
+    public void setChartBanner(String chartBanner) { this.chartBanner = chartBanner; }
+    public void setChartInter(String chartInter) { this.chartInter = chartInter; }
 
     /**********************************
      *
@@ -179,9 +181,10 @@ public class AdUnitHelper implements Serializable {
     public String getChartSdkStatus() {
         return chartSdkStatus;
     }
-
     public String getChartSignature() {
         return chartSignature;
     }
+    public String getChartBanner() { return chartBanner; }
+    public String getChartInter() { return chartInter; }
 }
 

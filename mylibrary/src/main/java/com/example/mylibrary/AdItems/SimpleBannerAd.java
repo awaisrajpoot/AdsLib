@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.chartboost.sdk.ads.Banner;
 import com.chartboost.sdk.callbacks.BannerCallback;
 import com.chartboost.sdk.events.CacheError;
 import com.chartboost.sdk.events.CacheEvent;
@@ -72,10 +73,10 @@ public class SimpleBannerAd {
     }
 
     private void checkLogValues(){
-        Log.e("app_ads", "admob banner status : " + adUnitHelper.getAdmobStatus());
-        Log.e("app_ads", "fb banner status : " + adUnitHelper.getFbStatus());
-        Log.e("app_ads", "unity banner status : " + adUnitHelper.getUnityStatus());
-        Log.e("app_ads", "chartboost banner status : " + adUnitHelper.getChartStatus());
+        Log.i("app_ads", "admob banner status : " + adUnitHelper.getAdmobStatus());
+        Log.i("app_ads", "fb banner status : " + adUnitHelper.getFbStatus());
+        Log.i("app_ads", "unity banner status : " + adUnitHelper.getUnityStatus());
+        Log.i("app_ads", "chartboost banner status : " + adUnitHelper.getChartStatus());
     }
 
     public void adRequestCaller(){
@@ -122,7 +123,7 @@ public class SimpleBannerAd {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                Log.e(ServerAdConstants.AD_LOG_TAG,"admob banner loaded");
+                Log.d(ServerAdConstants.AD_LOG_TAG,"admob banner loaded");
                 checkLogValues();
             }
 
@@ -177,7 +178,7 @@ public class SimpleBannerAd {
 
                     @Override
                     public void onAdLoaded(Ad ad) {
-                        Log.e(ServerAdConstants.AD_LOG_TAG,"fb banner loaded");
+                        Log.d(ServerAdConstants.AD_LOG_TAG,"fb banner loaded");
                         checkLogValues();
                     }
 
@@ -230,7 +231,7 @@ public class SimpleBannerAd {
         BannerAd.load(builder.build(), new LoadListener<BannerAd>() {
             @Override
             public void onAdLoaded(@Nullable BannerAd bannerAd, @Nullable UnityAdsError unityAdsError) {
-                Log.e(ServerAdConstants.AD_LOG_TAG, "unity banner loaded");
+                Log.d(ServerAdConstants.AD_LOG_TAG, "unity banner loaded");
                 checkLogValues();
 
                 adContainer.removeAllViews();
@@ -243,7 +244,8 @@ public class SimpleBannerAd {
     }
 
     private void setChartBoostBanner(){
-        Log.d(ServerAdConstants.AD_LOG_TAG, "calling chartBoost banner loaded");
+        Log.d(ServerAdConstants.AD_LOG_TAG, "calling chartBoost banner");
+
         BannerCallback bannerCallback = new BannerCallback() {
             @Override
             public void onAdExpired(@NonNull ExpirationEvent expirationEvent) {
@@ -276,11 +278,11 @@ public class SimpleBannerAd {
 
             @Override
             public void onAdShown(@NonNull ShowEvent showEvent, @Nullable ShowError showError) {
-                Log.e("cb_test","on rec banner show");
+                Log.e(ServerAdConstants.AD_LOG_TAG,"on cb rec banner show");
 
                 if (showError!=null){
                     if (showError.getCode().equals(ShowError.Code.NO_CACHED_AD)){
-                        Log.e("cb_test","rec banner no cache");
+                        Log.e(ServerAdConstants.AD_LOG_TAG,"rec cb banner no cache");
                         reloadAd();
                     }
 
@@ -299,7 +301,9 @@ public class SimpleBannerAd {
 
         };
 
-        chartBoostBanner = new com.chartboost.sdk.ads.Banner(mActivity, "start", com.chartboost.sdk.ads.Banner.BannerSize.MEDIUM,
+        chartBoostBanner = new com.chartboost.sdk.ads.Banner(mActivity,
+                adUnitHelper.getChartBanner(),
+                Banner.BannerSize.STANDARD,
                 bannerCallback,null);
 
     }

@@ -101,17 +101,17 @@ public class BannerRecAd {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d(ServerAdConstants.AD_LOG_TAG, "Lets Reload Rec Banner Ad");
+                Log.i(ServerAdConstants.AD_LOG_TAG, "Lets Reload Rec Banner Ad");
                 adRequestCaller();
             }
         }, adUnitHelper.getReloadTime());
     }
 
     private void checkLogValues(){
-        Log.e(ServerAdConstants.AD_LOG_TAG, "AdMob rect banner status : " + adUnitHelper.getAdmobStatus());
-        Log.e(ServerAdConstants.AD_LOG_TAG, "FB rect banner status : " + adUnitHelper.getFbStatus());
-        Log.e(ServerAdConstants.AD_LOG_TAG, "Unity rect banner status : " + adUnitHelper.getUnityStatus());
-        Log.e(ServerAdConstants.AD_LOG_TAG, "ChartBoost rect banner status : " + adUnitHelper.getChartStatus());
+        Log.i(ServerAdConstants.AD_LOG_TAG, "AdMob rect banner status : " + adUnitHelper.getAdmobStatus());
+        Log.i(ServerAdConstants.AD_LOG_TAG, "FB rect banner status : " + adUnitHelper.getFbStatus());
+        Log.i(ServerAdConstants.AD_LOG_TAG, "Unity rect banner status : " + adUnitHelper.getUnityStatus());
+        Log.i(ServerAdConstants.AD_LOG_TAG, "ChartBoost rect banner status : " + adUnitHelper.getChartStatus());
     }
 
     private void setAdmobRectangleBanner(){
@@ -132,7 +132,7 @@ public class BannerRecAd {
             public void onAdLoaded() {
                 super.onAdLoaded();
                 admobStatus = true;
-                Log.e(ServerAdConstants.AD_LOG_TAG, "AdMob rec banner loaded");
+                Log.d(ServerAdConstants.AD_LOG_TAG, "AdMob rec banner loaded");
                 checkLogValues();
                 showRecBanner(splashIsGone);
             }
@@ -159,7 +159,7 @@ public class BannerRecAd {
     }
 
     private void setFbRectangleBanner(){
-        Log.d(ServerAdConstants.AD_LOG_TAG, "calling facebook banner");
+        Log.i(ServerAdConstants.AD_LOG_TAG, "calling facebook banner");
         fbAdView = new com.facebook.ads.AdView(mActivity,
                 adUnitHelper.getFbRec(),//facebook rectangle banner id
                 AdSize.RECTANGLE_HEIGHT_250);
@@ -187,7 +187,7 @@ public class BannerRecAd {
                     @Override
                     public void onAdLoaded(Ad ad) {
                         fbStatus = true;
-                        Log.e(ServerAdConstants.AD_LOG_TAG, "fb banner loaded");
+                        Log.d(ServerAdConstants.AD_LOG_TAG, "fb banner loaded");
                         checkLogValues();
                         showRecBanner(splashIsGone);
                     }
@@ -214,7 +214,7 @@ public class BannerRecAd {
                 new BannerShowListener() {
                     @Override
                     public void onImpression(@NonNull BannerAd bannerAd) {
-                        Log.e(ServerAdConstants.AD_LOG_TAG, "Unity rec banner loaded");
+                        Log.d(ServerAdConstants.AD_LOG_TAG, "Unity rec banner loaded");
                         checkLogValues();
 
                     }
@@ -255,7 +255,7 @@ public class BannerRecAd {
     }
 
     private void setChartBoostRecBanner(){
-        Log.d(ServerAdConstants.AD_LOG_TAG, "calling chartBoost banner");
+        Log.i(ServerAdConstants.AD_LOG_TAG, "calling chartBoost banner");
 
         BannerCallback bannerCallback = new BannerCallback() {
             @Override
@@ -266,7 +266,7 @@ public class BannerRecAd {
             @Override
             public void onAdLoaded(@NonNull CacheEvent cacheEvent, @Nullable CacheError cacheError) {
 
-                Log.e(ServerAdConstants.AD_LOG_TAG, "chartBoost rec banner loaded");
+                Log.d(ServerAdConstants.AD_LOG_TAG, "chartBoost rec banner loaded");
 
                 if (chartBoostBanner != null) {
                     cbStatus = true;
@@ -287,7 +287,7 @@ public class BannerRecAd {
 
             @Override
             public void onAdShown(@NonNull ShowEvent showEvent, @Nullable ShowError showError) {
-                Log.e(ServerAdConstants.AD_LOG_TAG,"on cb rec banner show");
+                Log.d(ServerAdConstants.AD_LOG_TAG,"on cb rec banner show");
 
                 if (showError!=null){
                     if (showError.getCode().equals(ShowError.Code.NO_CACHED_AD)){
@@ -311,7 +311,9 @@ public class BannerRecAd {
 
         };
 
-        chartBoostBanner = new Banner(mActivity, "start", Banner.BannerSize.MEDIUM,
+        chartBoostBanner = new Banner(mActivity,
+                adUnitHelper.getChartBanner(),
+                Banner.BannerSize.MEDIUM,
                 bannerCallback,null);
 
     }
@@ -324,27 +326,27 @@ public class BannerRecAd {
         if (splashIsGone){
             if (admobStatus){
                 adContainer.addView(admobAdView);
-                Log.e(ServerAdConstants.AD_LOG_TAG,"AdMob banner showed");
+                Log.d(ServerAdConstants.AD_LOG_TAG,"AdMob banner showed");
             }
             else if (fbStatus){
                 // Add the ad view to your activity layout
                 adContainer.addView(fbAdView);
-                Log.e(ServerAdConstants.AD_LOG_TAG,"fb banner showed");
+                Log.d(ServerAdConstants.AD_LOG_TAG,"fb banner showed");
             }
             else if (unityStatus){
                 // Add the ad view to your activity layout
                 if (unityRecBanner != null){ adContainer.addView(unityRecBanner.getView()); }
 
-                Log.e(ServerAdConstants.AD_LOG_TAG,"unity banner showed");
+                Log.d(ServerAdConstants.AD_LOG_TAG,"unity banner showed");
             }
             else if (cbStatus){
-                Log.e(ServerAdConstants.AD_LOG_TAG,"cb banner showed");
+                Log.d(ServerAdConstants.AD_LOG_TAG,"cb banner showed");
                 adContainer.addView(chartBoostBanner);
                 chartBoostBanner.cache();
                 chartBoostBanner.show();
             }
             else {
-                Log.e(ServerAdConstants.AD_LOG_TAG,"banner pending");
+                Log.i(ServerAdConstants.AD_LOG_TAG,"banner pending");
             }
         }
     }

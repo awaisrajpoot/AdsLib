@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements AdsInitializer.Ad
         bannerRecAd.showRecBanner(true);
 
         interstitialAd = new AppInterstitialAd(MainActivity.this, adUnitHelper);
-        //interstitialAd.loadAd();
+        interstitialAd.loadAd();
     }
 
     @Override

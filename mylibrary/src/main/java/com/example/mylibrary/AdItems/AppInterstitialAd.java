@@ -68,10 +68,10 @@ public class AppInterstitialAd {
     }
 
     private void checkLogValues(){
-        Log.e("app_ads", "AdMob inter status : " + adUnitHelper.getAdmobStatus());
-        Log.e("app_ads", "fb inter status : " + adUnitHelper.getFbStatus());
-        Log.e("app_ads", "unity inter status : " + adUnitHelper.getUnityStatus());
-        Log.e("app_ads", "ChartBoost inter status : " + adUnitHelper.getChartStatus());
+        Log.i("app_ads", "AdMob inter status : " + adUnitHelper.getAdmobStatus());
+        Log.i("app_ads", "fb inter status : " + adUnitHelper.getFbStatus());
+        Log.i("app_ads", "unity inter status : " + adUnitHelper.getUnityStatus());
+        Log.i("app_ads", "ChartBoost inter status : " + adUnitHelper.getChartStatus());
     }
 
     public void loadAd(){
@@ -94,7 +94,7 @@ public class AppInterstitialAd {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d(ServerAdConstants.AD_LOG_TAG, "Lets Reload Interstitial Ads");
+                Log.i(ServerAdConstants.AD_LOG_TAG, "Lets Reload Interstitial Ads");
                 loadAd();
             }
         }, adUnitHelper.getReloadTime());
@@ -141,7 +141,7 @@ public class AppInterstitialAd {
     }
 
     private void loadFbInterstitial(){
-        Log.d(ServerAdConstants.AD_LOG_TAG, "calling facebook interstitial");
+        Log.i(ServerAdConstants.AD_LOG_TAG, "calling facebook interstitial");
         //making new object of facebook interstitial ad and setting the ad unit
         fbInterstitialAd = new InterstitialAd(mActivity.getApplicationContext(), adUnitHelper.getFbInter());
 
@@ -232,7 +232,10 @@ public class AppInterstitialAd {
     }
 
     private void loadChartBoostAd(){
-        chartboostInterstitial = new Interstitial("location", new InterstitialCallback() {
+
+        Log.i(ServerAdConstants.AD_LOG_TAG, "lets load chartBoost interstitial");
+
+        chartboostInterstitial = new Interstitial(adUnitHelper.getChartInter(), new InterstitialCallback() {
             @Override
             public void onAdExpired(@NonNull ExpirationEvent expirationEvent) {
                 reloadAd();
@@ -280,8 +283,12 @@ public class AppInterstitialAd {
 
     public void showLoadedInterstitial(){
 
+        Log.v(ServerAdConstants.AD_LOG_TAG, "Lets show interstitial");
+
         if(admobInterstitial !=null &&
                 adUnitHelper.getAdmobStatus().equals(ServerAdConstants.STATUS_OK)){//showing admob ad if loaded
+
+            Log.v(ServerAdConstants.AD_LOG_TAG, "start showing AdMob interstitial");
 
             admobInterstitial.show(mActivity);
 
@@ -292,15 +299,21 @@ public class AppInterstitialAd {
                 fbInterstitialAd.isAdLoaded() &&
                 adUnitHelper.getFbStatus().equals(ServerAdConstants.STATUS_OK)){
 
+            Log.v(ServerAdConstants.AD_LOG_TAG, "start showing FB interstitial");
+
             fbInterstitialAd.show();
         }
         else if(unityInterstitial!=null &&
                 adUnitHelper.getUnityStatus().equals(ServerAdConstants.STATUS_OK)){
 
+            Log.v(ServerAdConstants.AD_LOG_TAG, "start showing Unity interstitial");
+
             showUnityInterstitial(unityInterstitial);
         }
         else if(chartboostInterstitial != null &&
                 adUnitHelper.getChartStatus().equals(ServerAdConstants.STATUS_OK)) {
+
+            Log.v(ServerAdConstants.AD_LOG_TAG, "start showing CB interstitial");
 
             chartboostInterstitial.show();
         }
@@ -311,31 +324,31 @@ public class AppInterstitialAd {
 
     private void showUnityInterstitial(com.unity3d.ads.InterstitialAd interstitialAd){
 
-        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial lets show");
+        Log.i(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial lets show");
 
         interstitialAd.show(mActivity,
                 new ShowConfiguration.Builder().build(),
                 new InterstitialShowListener() {
                     @Override
                     public void onStarted(com.unity3d.ads.InterstitialAd interstitialAd) {
-                        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial start showing");
+                        Log.d(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial start showing");
                         reloadAd();
                     }
 
                     @Override
                     public void onClicked(com.unity3d.ads.InterstitialAd interstitialAd) {
-                        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial clicked");
+                        Log.d(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial clicked");
                     }
 
                     @Override
                     public void onCompleted(com.unity3d.ads.InterstitialAd interstitialAd, @NonNull ShowFinishState showFinishState) {
-                        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial completed");
+                        Log.d(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial completed");
 
                     }
 
                     @Override
                     public void onFailed(com.unity3d.ads.InterstitialAd interstitialAd, @NonNull UnityAdsError unityAdsError) {
-                        Log.v(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial failed to show");
+                        Log.e(ServerAdConstants.AD_LOG_TAG, "Unity Interstitial failed to show");
                         reloadAd();
                     }
                 });

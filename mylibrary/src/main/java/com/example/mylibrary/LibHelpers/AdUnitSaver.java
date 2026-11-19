@@ -52,6 +52,8 @@ public class AdUnitSaver {
             String chartSignature = jsonObject.get("chart_signature").getAsString();
             String chartSdkStatus = jsonObject.get("chart_sdk_status").getAsString();
             String chartStatus = jsonObject.get("chart_status").getAsString();
+            String chartBanner = jsonObject.get("chart_banner").getAsString();
+            String chartInter = jsonObject.get("chart_inter").getAsString();
 
             Log.e("app_ads",
                     "ads status : " + adsStatus + "\n" +
@@ -75,14 +77,17 @@ public class AdUnitSaver {
                             "chat id : " + chartId + "\n" +
                             "chart signature : " + chartSignature + "\n" +
                             "chart SDK status : " + chartSdkStatus + "\n" +
-                            "chart status : " + chartStatus + "\n");
+                            "chart status : " + chartStatus + "\n" +
+                            "chart banner : " + chartBanner + "\n" +
+                            "chart inter : " + chartInter + "\n");
 
 
             if (adsStatus!=null
                     && admobStatus!=null && admobId!=null && admobBanner!=null && admobInter!=null
                     && fbStatus!=null && fbRec!=null && fbBanner!=null && fbInter!=null
                     && unityStatus!=null && unityId!=null && unityTestMode!=null && unityBanner!=null && unityInter!=null
-                    && chartStatus!=null && chartId!=null && chartSignature!=null && chartSdkStatus!=null){
+                    && chartStatus!=null && chartId!=null && chartSignature!=null && chartSdkStatus!=null
+                    && chartBanner!=null && chartInter!=null){
 
                 adUnitHelper.setAdsStatus(adsStatus);
                 adUnitHelper.setReloadTime(reloadTime);
@@ -107,6 +112,8 @@ public class AdUnitSaver {
                 adUnitHelper.setChartId(chartId);
                 adUnitHelper.setChartSignature(chartSignature);
                 adUnitHelper.setChartSdkStatus(chartSdkStatus);
+                adUnitHelper.setChartBanner(chartBanner);
+                adUnitHelper.setChartInter(chartInter);
 
                 Log.e("app_ads",
                         "ads are saved to : AdUnitHelper ");
